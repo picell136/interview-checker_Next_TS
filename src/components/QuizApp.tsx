@@ -107,7 +107,7 @@ export function QuizApp({ topic }: QuizAppProps) {
     if (ratio >= 0.4) {
       return "Есть база, стоит повторить";
     }
-    return "Начните с разборов и пройдите ещё раз";
+    return "Повторите материал и пройдите ещё раз";
   }, [queue.length, score]);
 
   return (
