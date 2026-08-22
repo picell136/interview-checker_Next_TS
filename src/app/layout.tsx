@@ -8,7 +8,10 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Interview Checker | Викторина на знание основ программирования",
+  title: {
+    default: "Interview Checker | Викторина на знание основ программирования",
+    template: "%s | Викторина на знание основ программирования",
+  },
   description: "Викторина по вопросам собеседований: HTML/CSS, JavaScript, TypeScript, React и Next.js",
 };
 
