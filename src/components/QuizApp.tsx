@@ -180,13 +180,15 @@ export function QuizApp({ topic }: QuizAppProps) {
               const showSolution = status === "revealed";
 
               let className =
-                "flex w-full items-start gap-4 rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-left transition";
+                "flex w-full items-start gap-4 rounded-2xl border-2 bg-white/3 px-4 py-4 text-left transition";
               if (!showSolution) {
-                className += " hover:border-white/25 hover:bg-white/6";
+                className += " border-white/10 hover:border-white/25 hover:bg-white/6";
               } else if (isCorrect) {
-                className += " border-emerald-400/50 bg-emerald-400/10";
+                className += " border-emerald-500 bg-emerald-500/10";
               } else if (isSelected) {
-                className += " border-rose-400/50 bg-rose-400/10";
+                className += " border-rose-500 bg-rose-500/10";
+              } else {
+                className += " border-white/10 opacity-70";
               }
 
               return (
