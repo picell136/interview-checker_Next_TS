@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { QuizApp } from "@/components/QuizApp";
-import { TOPICS, getTopic, isTopicId } from "@/lib/topics";
-
-export function generateStaticParams() {
-  return TOPICS.map((topic) => ({ topic: topic.id }));
-}
+import { auth } from "@/auth";
+import { getTopic, isTopicId } from "@/lib/topics";
 
 type QuizPageProps = {
   params: Promise<{ topic: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: QuizPageProps): Promise<Metadata> {
   const { topic: topicId } = await params;
@@ -23,7 +22,12 @@ export async function generateMetadata({ params }: QuizPageProps): Promise<Metad
 }
 
 export default async function QuizPage({ params }: QuizPageProps) {
+  const session = await auth();
   const { topic: topicId } = await params;
+
+  if (!session?.user) {
+    redirect(`/login?callbackUrl=${encodeURIComponent(`/quiz/${topicId}`)}`);
+  }
 
   if (!isTopicId(topicId)) {
     notFound();

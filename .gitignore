@@ -31,6 +31,10 @@ yarn-error.log*
 # env files
 .env*
 
+# local user accounts
+/data/users.json
+
+
 # typescript
 next-env.d.ts
 *.tsbuildinfo

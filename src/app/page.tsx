@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { TOPICS } from "@/lib/topics";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-16">
+    <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col px-6 py-16">
       <header className="mb-12 max-w-2xl">
         <p className="mb-3 text-sm font-medium tracking-wide text-sky-300/80 uppercase">
           Подготовка к собеседованию
@@ -15,6 +18,19 @@ export default function HomePage() {
           Выберите технологию. Внутри — вопросы в формате викторины, 60 секунд на ответ
           и разбор сразу после выбора.
         </p>
+        {!session?.user ? (
+          <p className="mt-4 text-sm text-slate-500">
+            Чтобы начать викторину,{" "}
+            <Link href="/login" className="text-sky-300 hover:text-sky-200">
+              войдите
+            </Link>{" "}
+            или{" "}
+            <Link href="/register" className="text-sky-300 hover:text-sky-200">
+              зарегистрируйтесь
+            </Link>
+            .
+          </p>
+        ) : null}
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

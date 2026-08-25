@@ -111,7 +111,7 @@ export function QuizApp({ topic }: QuizAppProps) {
   }, [queue.length, score]);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10">
+    <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-3xl flex-col px-6 py-10">
       <div className="mb-8 flex items-center justify-between gap-4">
         <Link href="/" className="text-sm text-slate-400 transition hover:text-white">
           ← К технологиям
