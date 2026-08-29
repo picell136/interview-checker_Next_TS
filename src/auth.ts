@@ -4,8 +4,15 @@ import bcrypt from "bcryptjs";
 import { authConfig } from "@/auth.config";
 import { findUserByEmail } from "@/lib/users";
 
+const secret =
+  process.env.AUTH_SECRET?.trim() ||
+  process.env.NEXTAUTH_SECRET?.trim() ||
+  "interview-checker-dev-secret-do-not-use-in-prod";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  secret,
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {

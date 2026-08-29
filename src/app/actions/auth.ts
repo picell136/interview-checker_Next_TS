@@ -2,13 +2,61 @@
 
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
-import { signIn, signOut } from "@/auth";
+import { redirect } from "next/navigation";
+import { signIn, signOut, auth } from "@/auth";
 import { safeCallbackUrl, validateRegisterInput } from "@/lib/auth-validation";
 import { createUser } from "@/lib/users";
 
 export type AuthFormState = {
   error?: string;
 };
+
+function isRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    String((error as { digest: unknown }).digest).startsWith("NEXT_REDIRECT")
+  );
+}
+
+function authErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof AuthError && error.type === "CredentialsSignin") {
+    return "Неверный email или пароль";
+  }
+  if (typeof error === "object" && error !== null && "type" in error) {
+    if (String((error as { type: unknown }).type) === "CredentialsSignin") {
+      return "Неверный email или пароль";
+    }
+  }
+  return fallback;
+}
+
+async function signInWithCredentials(
+  email: string,
+  password: string,
+  callbackUrl: string,
+): Promise<AuthFormState> {
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    return { error: authErrorMessage(error, "Не удалось войти. Проверьте email и пароль.") };
+  }
+
+  const session = await auth();
+  if (!session?.user) {
+    return { error: "Не удалось создать сессию. Попробуйте войти ещё раз." };
+  }
+
+  redirect(callbackUrl);
+}
 
 export async function loginAction(
   _prevState: AuthFormState | undefined,
@@ -22,19 +70,7 @@ export async function loginAction(
     return { error: "Введите email и пароль" };
   }
 
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl,
-    });
-    return {};
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return { error: "Неверный email или пароль" };
-    }
-    throw error;
-  }
+  return signInWithCredentials(email, password, callbackUrl);
 }
 
 export async function registerAction(
@@ -64,21 +100,16 @@ export async function registerAction(
     if (error instanceof Error && error.message === "EMAIL_TAKEN") {
       return { error: "Этот email уже зарегистрирован" };
     }
-    throw error;
+    return { error: "Не удалось сохранить аккаунт. Попробуйте ещё раз." };
   }
 
   try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl,
-    });
-    return {};
+    return await signInWithCredentials(email, password, callbackUrl);
   } catch (error) {
-    if (error instanceof AuthError) {
-      return { error: "Аккаунт создан, но войти не удалось. Попробуйте вход." };
+    if (isRedirectError(error)) {
+      throw error;
     }
-    throw error;
+    return { error: "Аккаунт создан, но войти не удалось. Попробуйте вход." };
   }
 }
 

@@ -31,8 +31,9 @@ yarn-error.log*
 # env files
 .env*
 
-# local user accounts
+# local user data
 /data/users.json
+/data/results.json
 
 
 # typescript
