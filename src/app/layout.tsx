@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist } from "next/font/google";
 import { SiteHeader, getThemeFromCookie } from "@/components/SiteHeader";
 import { ThemeSync } from "@/components/theme";
@@ -26,14 +27,10 @@ export default async function RootLayout({
 
   return (
     <html lang="ru" data-theme={theme} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=document.cookie.match(/(?:^|; )theme=([^;]*)/);var v=t?decodeURIComponent(t[1]):localStorage.getItem("theme");if(v==="light"||v==="dark"){document.documentElement.dataset.theme=v;}}catch(e){}})();`,
-          }}
-        />
-      </head>
-      <body className={`${geist.variable} font-sans antialiased text-fg`}>
+      <body className={`${geist.variable} ${geist.className} antialiased text-fg`}>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=document.cookie.match(/(?:^|; )theme=([^;]*)/);var v=t?decodeURIComponent(t[1]):localStorage.getItem("theme");if(v==="light"||v==="dark"){document.documentElement.dataset.theme=v;}}catch(e){}})();`}
+        </Script>
         <ThemeSync />
         <SiteHeader />
         {children}

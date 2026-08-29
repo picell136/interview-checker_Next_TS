@@ -12,7 +12,7 @@ export async function SiteHeader() {
     <header className="sticky top-0 z-20 border-b border-line bg-header backdrop-blur-md">
       <div className="flex h-16 w-full items-center gap-4 pl-3 pr-6">
         <BurgerMenu />
-        <Link href="/" className="text-sm font-semibold tracking-tight text-fg">
+        <Link href="/" prefetch={false} className="text-sm font-semibold tracking-tight text-fg">
           Interview Checker
         </Link>
         <nav className="ml-auto flex items-center gap-2 text-sm">
@@ -32,10 +32,10 @@ export async function SiteHeader() {
             </>
           ) : (
             <>
-              <Link href="/login" className="rounded-xl px-3 py-1.5 font-medium text-muted transition hover:text-fg">
+              <Link href="/login" prefetch={false} className="rounded-xl px-3 py-1.5 font-medium text-muted transition hover:text-fg">
                 Вход
               </Link>
-              <Link href="/register" className="rounded-xl bg-btn px-3 py-1.5 font-semibold text-btn-fg">
+              <Link href="/register" prefetch={false} className="rounded-xl bg-btn px-3 py-1.5 font-semibold text-btn-fg">
                 Регистрация
               </Link>
             </>

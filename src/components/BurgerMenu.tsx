@@ -57,6 +57,7 @@ export function BurgerMenu() {
         >
           <Link
             href="/results"
+            prefetch={false}
             role="menuitem"
             className="block px-4 py-2.5 text-sm text-fg transition hover:bg-input"
             onClick={() => setOpen(false)}
@@ -65,6 +66,7 @@ export function BurgerMenu() {
           </Link>
           <Link
             href="/settings"
+            prefetch={false}
             role="menuitem"
             className="block px-4 py-2.5 text-sm text-fg transition hover:bg-input"
             onClick={() => setOpen(false)}

@@ -93,14 +93,14 @@ export function AuthForm({ mode, action, callbackUrl }: AuthFormProps) {
         {isRegister ? (
           <>
             Уже есть аккаунт?{" "}
-            <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="text-sky-500 hover:text-sky-400">
+            <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} prefetch={false} className="text-sky-500 hover:text-sky-400">
               Войти
             </Link>
           </>
         ) : (
           <>
             Нет аккаунта?{" "}
-            <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="text-sky-500 hover:text-sky-400">
+            <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`} prefetch={false} className="text-sky-500 hover:text-sky-400">
               Зарегистрироваться
             </Link>
           </>
