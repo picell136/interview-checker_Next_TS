@@ -24,10 +24,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-md flex-col justify-center px-6 py-16">
-      <section className="rounded-3xl border border-white/10 bg-[#12182b]/80 p-8">
-        <p className="text-sm font-medium text-sky-300/80">Аккаунт</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Вход</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-400">
+      <section className="rounded-3xl border border-line bg-card p-8">
+        <p className="text-sm font-medium text-sky-500">Аккаунт</p>
+        <h1 className="mt-2 text-3xl font-semibold text-fg">Вход</h1>
+        <p className="mt-3 text-sm leading-6 text-muted">
           Войдите, чтобы запускать викторины. Без аккаунта темы на главной можно только смотреть.
         </p>
         <AuthForm mode="login" action={loginAction} callbackUrl={callbackUrl} />
