@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { signIn, signOut, auth } from "@/auth";
 import { safeCallbackUrl, validateRegisterInput } from "@/lib/auth-validation";
+import { StorageError } from "@/lib/db";
 import { createUser } from "@/lib/users";
 
 export type AuthFormState = {
@@ -97,8 +98,17 @@ export async function registerAction(
     const passwordHash = await bcrypt.hash(password, 10);
     await createUser({ name, email, passwordHash });
   } catch (error) {
-    if (error instanceof Error && error.message === "EMAIL_TAKEN") {
+    if (
+      (error instanceof StorageError && error.code === "EMAIL_TAKEN") ||
+      (error instanceof Error && error.message === "EMAIL_TAKEN")
+    ) {
       return { error: "Этот email уже зарегистрирован" };
+    }
+    if (error instanceof StorageError && error.code === "NO_DATABASE") {
+      return {
+        error:
+          "На сервере нет базы данных. Добавьте DATABASE_URL (Neon Postgres) в переменные окружения Vercel и задеплойте проект снова.",
+      };
     }
     return { error: "Не удалось сохранить аккаунт. Попробуйте ещё раз." };
   }
