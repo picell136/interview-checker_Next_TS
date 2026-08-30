@@ -3,7 +3,7 @@
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
-import { signIn, signOut, auth } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { safeCallbackUrl, validateRegisterInput } from "@/lib/auth-validation";
 import { StorageError } from "@/lib/db";
 import { createUser } from "@/lib/users";
@@ -38,8 +38,10 @@ async function signInWithCredentials(
   password: string,
   callbackUrl: string,
 ): Promise<AuthFormState> {
+  let resultUrl: string;
+
   try {
-    await signIn("credentials", {
+    resultUrl = await signIn("credentials", {
       email,
       password,
       redirect: false,
@@ -51,9 +53,8 @@ async function signInWithCredentials(
     return { error: authErrorMessage(error, "Не удалось войти. Проверьте email и пароль.") };
   }
 
-  const session = await auth();
-  if (!session?.user) {
-    return { error: "Не удалось создать сессию. Попробуйте войти ещё раз." };
+  if (resultUrl && new URL(resultUrl, "http://localhost").searchParams.has("error")) {
+    return { error: "Неверный email или пароль" };
   }
 
   redirect(callbackUrl);
