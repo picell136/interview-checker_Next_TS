@@ -63,6 +63,14 @@ body {
   color: var(--fg);
 }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .option-letter {
   font-variant-numeric: tabular-nums;
 }
